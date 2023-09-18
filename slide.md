@@ -15,7 +15,7 @@ marp: true
   - Method Decorators
   - Accessor Decorators
   - Parameter Decorators
-- Reflect-metadata
+- reflect-metadata
 - 所感
 ---
 
@@ -290,3 +290,89 @@ class Report {
 Report.print("test"); // エラーにならない
 Report.print(undefined as any); // 実行時エラーになる
 ```
+
+---
+
+## reflect-metadata
+
+関数やクラス、プロパティのメタデータを作成、取得できたりするライブラリ。
+このライブラリを利用すると本来動作に影響しないTypescriptの型に意味をもたせる事ができる
+
+---
+
+## reflect-metadata
+
+```typescript
+import "reflect-metadata";
+
+// 引数の型, 返り値の型が違う場合実行時エラーを吐かせるdecorator
+function Strict(
+  target: any,
+  propertyKey: string,
+  descriptor: PropertyDescriptor
+) {
+  const original = descriptor.value!;
+  // 引数の型情報を取得
+  const parameterTypes = Reflect.getMetadata('design:paramtypes', target, propertyKey);
+  // 返り値の型情報を取得
+  const returnType = Reflect.getMetadata('design:returntype', target, propertyKey);
+
+  const expect = (arg: any, paramType: any) => {
+    if(arg === undefined || arg === null) return paramType === undefined;
+    return arg.constructor === paramType || arg instanceof paramType;
+  }
+
+  descriptor.value = function(...args: any[]) {
+    args.forEach((arg, index) => {
+      if(!expect(arg, parameterTypes[index])) {
+        throw new Error(`Invalid args, index: ${index}`);
+      }
+    })
+
+    const result = original.call(this, ...args);
+    if(!expect(result, returnType)) {
+        throw new Error(`Invalid resultType, expect: ${returnType}, current: ${result}`);
+    }
+
+    return result;
+  }
+}
+```
+
+---
+
+## reflect-metadata
+
+```typescript
+class User {
+  constructor(public id: string) {}
+}
+class Test {
+  @Strict
+  say(
+    id: number,
+    name: string,
+    user?: User
+  ): [number, string] {
+    console.log(id);
+    console.log(name);
+    console.log(user);
+
+    return 123 as any; // Arrayではないため、エラーになる
+  }
+}
+
+new Test().say(1, "test", new User('test'));
+```
+
+
+# 所感
+
+# 参考資料
+
+- TypeScript Documentation Decorators
+  - https://www.typescriptlang.org/docs/handbook/decorators.html
+- A Complete Guide to TypeScript Decorators 
+  - https://mirone.me/a-complete-guide-to-typescript-decorator/
+
+# ありがとうございました
