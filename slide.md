@@ -23,7 +23,7 @@ marp: true
 
 今回説明するのは`experimentalDecorators`オプションを使用することで使えるようになる実験的なDecoratorです。
 
-Typescript@5.0.0以上で使用できるDecoratorとは仕様が違うため注意してください。
+TypeScript@5.0.0以上で使用できるDecoratorとは仕様が違うため注意してください。
 
 ---
 
@@ -40,7 +40,7 @@ Methodの定義自体を変えずに、例えばLogging処理を追加したり�
 
 # Decoratorの種類
 
-Typescriptのデコレーターは以下の様な種類があります。
+TypeScriptのデコレーターは以下の様な種類があります。
 
 - Class Decorators
   - クラス宣言に付加する
@@ -296,7 +296,7 @@ Report.print(undefined as any); // 実行時エラーになる
 ## reflect-metadata
 
 関数やクラス、プロパティのメタデータを作成、取得できたりするライブラリ。
-このライブラリを利用すると本来動作に影響しないTypescriptの型に意味をもたせる事ができる
+このライブラリを利用すると本来動作に影響しないTypeScriptの型に意味をもたせる事ができる
 
 ---
 
@@ -338,12 +338,12 @@ function Strict(
   }
 }
 ```
-
 ---
 
 ## reflect-metadata
 
 ```typescript
+
 class User {
   constructor(public id: string) {}
 }
@@ -365,8 +365,11 @@ class Test {
 new Test().say(1, "test", new User('test'));
 ```
 
+---
 
 # 所感
+
+---
 
 # 参考資料
 
@@ -374,5 +377,7 @@ new Test().say(1, "test", new User('test'));
   - https://www.typescriptlang.org/docs/handbook/decorators.html
 - A Complete Guide to TypeScript Decorators 
   - https://mirone.me/a-complete-guide-to-typescript-decorator/
+
+---
 
 # ありがとうございました
